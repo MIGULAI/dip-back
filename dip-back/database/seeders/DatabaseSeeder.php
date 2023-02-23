@@ -15,6 +15,8 @@ use Database\Seeders\RankSeeder;
 use Database\Seeders\TypeSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\AuthorSeeder;
+use Database\Seeders\PublisherSeeder;
+use Database\Seeders\GlobalSetupSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,6 +26,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            GlobalSetupSeeder::class,
             CountrySeeder::class,
             DegreeSeeder::class,
             GroupSeeder::class,
@@ -35,6 +38,7 @@ class DatabaseSeeder extends Seeder
             TypeSeeder::class,
             UserSeeder::class,
             AuthorSeeder::class,
+            PublisherSeeder::class
         ]);
     }
 }

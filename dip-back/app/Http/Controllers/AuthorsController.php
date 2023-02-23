@@ -3,18 +3,35 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use App\Models\Group;
+use App\Models\Organization;
+use App\Models\Department;
+use App\Models\Position;
+use App\Models\Degree;
+use App\Models\Ranks;
 use App\Models\Author;
 
 
 class AuthorsController extends Controller
 {
-    public function GetAutors(){
+    public function GetAuthors()
+    {
         try {
-            $autors = Author::all();
-
+            
+            $data = [
+                'authors' => Author::join('departments', 'departments.id', 'authors.Group')    
+                                    ->join('organizations', 'organizations.id', 'departments.idOrganization')
+                                    ->join('positions', 'positions.id', 'authors.Position')
+                                    ->join('groups', 'groups.id', 'authors.Group')
+                                    ->join('degrees', 'degrees.id', 'authors.Degree')
+                                    ->join('ranks', 'ranks.id', 'authors.Rank')
+                                    ->get()
+            ];
             return response()->json([
                 'success' => true,
-                'message' => $autors->toJson()
+                'message' => 'Authors was found',
+                'data' => $data
             ]);
         } catch (\Throwable $th) {
             return response()->json([
@@ -24,11 +41,35 @@ class AuthorsController extends Controller
         }
     }
 
-    public function AddAutor(Request $req)
+    public function GetAuthorsSetup()
     {
         try {
-            $newAutor = $req->obj;
-            $author = new Autor();
+            $data = [
+                'groups' => Group::get(['id', 'GroupName']),
+                'organizations' => Organization::get(['id', 'OrganizationName']),
+                'departments' => Department::get(['id', 'DepartmanName', 'idOrganization']),
+                'positions' => Position::get(['id', 'PositionName']),
+                'degrees' => Degree::get(['id', 'DegreeName']),
+                'ranks' => Ranks::get(['id', 'RankName']),
+            ];
+            return response()->json([
+                'success' => true,
+                'message' => 'Setup founded successfully',
+                'data' => $data,
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function AddAuthor(Request $req)
+    {
+        try {
+            $newAuthor = $req->obj;
+            $author = new Author();
             $author->SerName = $newAuthor['sername'];
             $author->Name = $newAuthor['name'];
             $author->Patronic = $newAuthor['partonic'];
@@ -37,6 +78,7 @@ class AuthorsController extends Controller
             $author->Group = $newAuthor['group'];
             $author->Degree = $newAuthor['degree'];
             $author->Rank = $newAuthor['rank'];
+            $author->save();
             return response()->json([
                 'success' => true,
                 'message' => 'Author successfully added'

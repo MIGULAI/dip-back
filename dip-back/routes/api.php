@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\AuthorsController;
+use App\Http\Controllers\PublicationsController;
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\SetupController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,9 +25,17 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
-Route::get('/autors', [AuthorsController::class, 'GetAutors']);
+Route::get('/setup', [SetupController::class, 'getGlobalSetup']);
+
+Route::get('/authors', [AuthorsController::class, 'GetAuthors']);
+Route::get('/positions', [PositionController::class, 'GetPositions']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('/autor/add', [AuthorsController::class, 'AddAutors']);
+    Route::get('/authors/setup', [AuthorsController::class, 'GetAuthorsSetup']);
+    Route::post('/author/add', [AuthorsController::class, 'AddAuthor']);
 
+    Route::get('/publications/setup', [PublicationsController::class, 'GetPublicationsSetup']);
+    Route::post('/publications/add', [PublicationsController::class, 'AddPublication']);
+
+    Route::get('/statistic/auth', [StatisticController::class, 'GetBasicStatistic']);
 });
