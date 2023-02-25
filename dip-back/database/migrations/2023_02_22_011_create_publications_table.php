@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -17,7 +18,7 @@ return new class extends Migration
             $table->string('StartPage');
             $table->string('EndPage');
             $table->string('UPP');
-            $table->string('PublicationDate');
+            $table->string('PublicationDate')->default(date('Y-m'));
             $table->string('DOI')->nullable()->default(null);
             $table->foreignId('Type')
                 ->default('1')

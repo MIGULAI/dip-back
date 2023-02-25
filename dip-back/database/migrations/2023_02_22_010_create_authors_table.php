@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('authors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('Orcid')->unique();
+            $table->string('Orcid')->nullable()->unique();
             $table->string('Scopus')->nullable();
             $table->string('SerName');
             $table->string('Name');
