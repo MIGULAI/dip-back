@@ -11,7 +11,7 @@ use App\Models\Position;
 use App\Models\Degree;
 use App\Models\Ranks;
 use App\Models\Author;
-
+use Mockery\Undefined;
 
 class AuthorsController extends Controller
 {
@@ -64,25 +64,41 @@ class AuthorsController extends Controller
             ]);
         }
     }
+    public static function  NewAuthorCreate($newAuthor){
+        try {
+            $author = new Author();
+            $author->SerName = $newAuthor['sername'];
+            $author->Name = $newAuthor['name'];
+            $author->Patronic = $newAuthor['partonic'];
+            isset($newAuthor['department']) && $author->Department = $newAuthor['department'];
+            isset($newAuthor['place']) && $author->Position = $newAuthor['place'];
+            isset($newAuthor['group']) && $author->Group = $newAuthor['group'];
+            isset($newAuthor['degree']) && $author->Degree = $newAuthor['degree'];
+            isset($newAuthor['rank']) && $author->Rank = $newAuthor['rank'];
+            $author->save();
+            return [true, $author->id];
+        } catch (\Throwable $th) {
+            return [false, $th->getMessage()];
+        }
+
+    }
 
     public function AddAuthor(Request $req)
     {
         try {
             $newAuthor = $req->obj;
-            $author = new Author();
-            $author->SerName = $newAuthor['sername'];
-            $author->Name = $newAuthor['name'];
-            $author->Patronic = $newAuthor['partonic'];
-            $author->Department = $newAuthor['department'];
-            $author->Position = $newAuthor['place'];
-            $author->Group = $newAuthor['group'];
-            $author->Degree = $newAuthor['degree'];
-            $author->Rank = $newAuthor['rank'];
-            $author->save();
-            return response()->json([
-                'success' => true,
-                'message' => 'Author successfully added'
-            ]);
+            $status = $this::NewAuthorCreate($newAuthor);
+            if($status){
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Author successfully added'
+                ]);
+            }else{
+                return response()->json([
+                    'success' => false,
+                    'message' => $status
+                ]);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
