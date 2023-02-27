@@ -28,7 +28,12 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::get('/setup', [SetupController::class, 'GetGlobalSetup']);
 
+Route::post('/publication/byAutorId', [PublicationsController::class, 'PublByAuthorID']);
+
+
 Route::get('/plans/years', [PlanController::class, 'GetYearsList']);
+Route::post('/plans/year', [PlanController::class, 'GetPlansByYear']);
+Route::post('/plan/about', [PlanController::class, 'GetPlanById']);
 
 Route::get('/authors', [AuthorsController::class, 'GetAuthors']);
 Route::get('/positions', [PositionController::class, 'GetPositions']);

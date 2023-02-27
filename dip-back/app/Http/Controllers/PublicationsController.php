@@ -200,7 +200,29 @@ class PublicationsController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'message' => $th->getLine()
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function PublByAuthorID(Request $req){
+        try {
+            $publs = Publication::join('publication_authors', 'publications.id', 'publication_authors.Publication')->where('Author', $req->id)->get();
+            foreach($publs as $publ){
+                $publ->TypeName = Type::where('id', $publ->Type)->first()->TypeName;
+                $publ->LanguageName = Languages::where('id', $publ->Language)->first()->LanguageName;
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'Publications of author by id',
+                'data' => [
+                    'publs' => $publs
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
             ]);
         }
     }

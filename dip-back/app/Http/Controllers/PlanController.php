@@ -31,9 +31,27 @@ class PlanController extends Controller
         }
     }
 
-    //повернення всіх планів на певний заданий рік
     public function GetPlansByYear(Request $req){
-        return false;
+        try {
+            $plans = Plan::where('Year', $req->year)->get();
+            foreach($plans as $plan){
+                $plan->AuthorSerName = Author::where('id',$plan->AuthorId)->first()->SerName;
+                $plan->AuthorName = Author::where('id',$plan->AuthorId)->first()->Name;
+                $plan->AuthorPatronic = Author::where('id',$plan->AuthorId)->first()->Patronic;
+             }
+            return response()->json([
+                'success' => true,
+                'message' => 'Plans was found',
+                'data' => [
+                    'plans' => $plans
+                ] 
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
     }
 
     public function CreatePlanByForYear(Request $req){
@@ -148,6 +166,24 @@ class PlanController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Plans recalculated'
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function GetPlanById(Request $req){
+        try {
+            $plan = Plan::where('id', $req->id)->first(); 
+            return response()->json([
+                'success' => true,
+                'message' => 'Plan founded',
+                'data' => [
+                    'plan' => $plan
+                ]
             ]);
         } catch (\Throwable $th) {
             return response()->json([
