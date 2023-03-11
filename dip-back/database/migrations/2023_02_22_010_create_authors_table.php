@@ -13,13 +13,22 @@ return new class extends Migration
     {
         Schema::create('authors', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('Orcid')->nullable()->unique();
+            $table->string('Orcid', 16)->nullable()->unique();
             $table->string('Scopus')->nullable();
             $table->string('SerName');
             $table->string('Name');
             $table->string('Patronic')
                 ->nullable()
                 ->default(null);
+            $table->string('SerNameEng')
+                    ->nullable()
+                    ->default(null);
+            $table->string('NameEng')
+                    ->nullable()
+                    ->default(null);
+            $table->string('PatronicEng')
+                    ->nullable()
+                    ->default(null);
             $table->foreignId('Position')
                 ->default('1')
                 ->references('id')
@@ -28,10 +37,10 @@ return new class extends Migration
                 ->default('1')
                 ->references('id')
                 ->on('departments');
-            $table->foreignId('Group')
+            $table->foreignId('Specialty')
                 ->default('1')
                 ->references('id')
-                ->on('groups');
+                ->on('specialties');
             $table->foreignId('Degree')
                 ->default('1')
                 ->references('id')

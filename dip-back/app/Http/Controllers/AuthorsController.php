@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Group;
+use App\Models\Specialty;
 use App\Models\Organization;
 use App\Models\Department;
 use App\Models\Position;
@@ -20,10 +20,10 @@ class AuthorsController extends Controller
         try {
             
             $data = [
-                'authors' => Author::join('departments', 'departments.id', 'authors.Group')    
+                'authors' => Author::join('departments', 'departments.id', 'authors.Specialty')    
                                     ->join('organizations', 'organizations.id', 'departments.idOrganization')
                                     ->join('positions', 'positions.id', 'authors.Position')
-                                    ->join('groups', 'groups.id', 'authors.Group')
+                                    ->join('specialties', 'specialties.id', 'authors.Specialty')
                                     ->join('degrees', 'degrees.id', 'authors.Degree')
                                     ->join('ranks', 'ranks.id', 'authors.Rank')
                                     ->get()
@@ -45,7 +45,7 @@ class AuthorsController extends Controller
     {
         try {
             $data = [
-                'groups' => Group::get(['id', 'GroupName']),
+                'specialties' => Specialty::get(['id', 'SpecialtyName']),
                 'organizations' => Organization::get(['id', 'OrganizationName']),
                 'departments' => Department::get(['id', 'DepartmanName', 'idOrganization']),
                 'positions' => Position::get(['id', 'PositionName']),
@@ -72,7 +72,7 @@ class AuthorsController extends Controller
             $author->Patronic = $newAuthor['partonic'];
             isset($newAuthor['department']) && $author->Department = $newAuthor['department'];
             isset($newAuthor['place']) && $author->Position = $newAuthor['place'];
-            isset($newAuthor['group']) && $author->Group = $newAuthor['group'];
+            isset($newAuthor['group']) && $author->Specialty = $newAuthor['group'];
             isset($newAuthor['degree']) && $author->Degree = $newAuthor['degree'];
             isset($newAuthor['rank']) && $author->Rank = $newAuthor['rank'];
             $author->save();

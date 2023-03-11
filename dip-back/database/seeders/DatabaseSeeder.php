@@ -6,7 +6,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Database\Seeders\CountrySeeder;
 use Database\Seeders\DegreeSeeder;
-use Database\Seeders\GroupSeeder;
+use Database\Seeders\SpecialtySeeder;
 use Database\Seeders\LanguageSeeder;
 use Database\Seeders\OrganizationSeeder;
 use Database\Seeders\DepartmentSeeder;
@@ -17,6 +17,7 @@ use Database\Seeders\UserSeeder;
 use Database\Seeders\AuthorSeeder;
 use Database\Seeders\PublisherSeeder;
 use Database\Seeders\GlobalSetupSeeder;
+use Database\Seeders\PlanSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,7 +30,7 @@ class DatabaseSeeder extends Seeder
             GlobalSetupSeeder::class,
             CountrySeeder::class,
             DegreeSeeder::class,
-            GroupSeeder::class,
+            SpecialtySeeder::class,
             LanguageSeeder::class,
             OrganizationSeeder::class,
             DepartmentSeeder::class,
@@ -38,7 +39,8 @@ class DatabaseSeeder extends Seeder
             TypeSeeder::class,
             UserSeeder::class,
             AuthorSeeder::class,
-            PublisherSeeder::class
+            PublisherSeeder::class,
+            PlanSeeder::class
         ]);
     }
 }

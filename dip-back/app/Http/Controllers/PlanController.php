@@ -53,26 +53,33 @@ class PlanController extends Controller
             ]);
         }
     }
+    
+    public function CreatePlan($planingYear, $setup) : array
+    {
+        
+        $authors = Author::where('PlanningStatus', '1')->get();
+        $plans = [];
+        foreach($authors as $author){
+            $plan = new Plan();
+            $plan->AuthorId = $author->id;
+            $plan->AuthorName = $author->Name;
+            $plan->AuthorSername = $author->SerName;
+            $plan->AuthorPatronic = $author->Patronic;
+            $plan->Year = $planingYear;
+            $planingYear% intval($setup['thesesYears']) == 0 ? $plan->Theses = intval($setup['thesesNumber']) :  $plan->Theses = 0;
+            $planingYear% intval($setup['paYears']) == 0 ? $plan->ProfetionalArticles = intval($setup['paNumber']) :  $plan->ProfetionalArticles = 0;
+            $planingYear% intval($setup['scopusYears']) == 0 ? $plan->Scopus = intval($setup['scopusNumber']) :  $plan->Scopus = 0;
+            $planingYear% intval($setup['manualsYears']) == 0 ? $plan->Manuals = intval($setup['manualsNumber']) :  $plan->Manuals = 0;
+            array_push($plans, $plan);
+        }
+        return $plans;
+    }
 
     public function CreatePlanByForYear(Request $req){
         try {
             $planingYear = intval($req->year);
             $setup = GlobalSetup::pluck('SetupValue','SetupName')->all();
-            $authors = Author::where('PlanningStatus', '1')->get();
-            $plans = [];
-            foreach($authors as $author){
-                $plan = new Plan();
-                $plan->AuthorId = $author->id;
-                $plan->AuthorName = $author->Name;
-                $plan->AuthorSername = $author->SerName;
-                $plan->AuthorPatronic = $author->Patronic;
-                $plan->Year = $planingYear;
-                $planingYear% intval($setup['thesesYears']) == 0 ? $plan->Theses = intval($setup['thesesNumber']) :  $plan->Theses = 0;
-                $planingYear% intval($setup['paYears']) == 0 ? $plan->ProfetionalArticles = intval($setup['paNumber']) :  $plan->ProfetionalArticles = 0;
-                $planingYear% intval($setup['scopusYears']) == 0 ? $plan->Scopus = intval($setup['scopusNumber']) :  $plan->Scopus = 0;
-                $planingYear% intval($setup['manualsYears']) == 0 ? $plan->Manuals = intval($setup['manualsNumber']) :  $plan->Manuals = 0;
-                array_push($plans, $plan);
-            }
+            $plans = $this->CreatePlan($planingYear, $setup);
             return response()->json([
                 'success' => true,
                 'message' => "Plan on {$planingYear} year created",
@@ -89,19 +96,25 @@ class PlanController extends Controller
         }
     }
     
+    public function Saver($plans): bool
+    {
+        foreach($plans as $plan){
+            $newPlan = new Plan();
+            $newPlan->AuthorId = $plan['AuthorId'];
+            $newPlan->Year = $plan['Year'];
+            $newPlan->Theses = $plan['Theses'];
+            $newPlan->ProfetionalArticles = $plan['ProfetionalArticles'];
+            $newPlan->Scopus = $plan['Scopus'];
+            $newPlan->Manuals = $plan['Manuals'];
+            $newPlan->save();
+        }  
+        return true;
+    }
+
     public function SavePlan(Request $req){
         try {
             $plans = $req->plan;
-            foreach($plans as $plan){
-                $newPlan = new Plan();
-                $newPlan->AuthorId = $plan['AuthorId'];
-                $newPlan->Year = $plan['Year'];
-                $newPlan->Theses = $plan['Theses'];
-                $newPlan->ProfetionalArticles = $plan['ProfetionalArticles'];
-                $newPlan->Scopus = $plan['Scopus'];
-                $newPlan->Manuals = $plan['Manuals'];
-                $newPlan->save();
-            }   
+            $this->Saver($plans);
             return response()->json([
                 'success' => true,
                 'message' => 'Plan was successfully added'
