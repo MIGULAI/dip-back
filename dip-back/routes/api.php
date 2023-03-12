@@ -36,6 +36,7 @@ Route::post('/plans/year', [PlanController::class, 'GetPlansByYear']);
 Route::post('/plan/about', [PlanController::class, 'GetPlanById']);
 
 Route::get('/authors', [AuthorsController::class, 'GetAuthors']);
+Route::get('/author', [AuthorsController::class, 'GetAuthor']);
 Route::get('/positions', [PositionController::class, 'GetPositions']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {

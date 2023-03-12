@@ -20,7 +20,8 @@ class AuthorsController extends Controller
         try {
             
             $data = [
-                'authors' => Author::join('departments', 'departments.id', 'authors.Specialty')    
+                'authors' => Author::select('authors.*')
+                                    ->join('departments', 'departments.id', 'authors.Specialty')    
                                     ->join('organizations', 'organizations.id', 'departments.idOrganization')
                                     ->join('positions', 'positions.id', 'authors.Position')
                                     ->join('specialties', 'specialties.id', 'authors.Specialty')
@@ -32,6 +33,35 @@ class AuthorsController extends Controller
                 'success' => true,
                 'message' => 'Authors was found',
                 'data' => $data
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
+
+    public function GetAuthor(Request $req)
+    {
+        try {
+            
+            /*$data = [
+                'authors' => Author::select('authors.*')
+                                    ->join('departments', 'departments.id', 'authors.Specialty')    
+                                    ->join('organizations', 'organizations.id', 'departments.idOrganization')
+                                    ->join('positions', 'positions.id', 'authors.Position')
+                                    ->join('specialties', 'specialties.id', 'authors.Specialty')
+                                    ->join('degrees', 'degrees.id', 'authors.Degree')
+                                    ->join('ranks', 'ranks.id', 'authors.Rank')
+                                    ->get()
+            ];*/
+            return response()->json([
+                'success' => true,
+                'message' => 'Author was found',
+                'data' => [ 
+                    "author" => Author::where('id', $req->id)->first()
+                ]
             ]);
         } catch (\Throwable $th) {
             return response()->json([
