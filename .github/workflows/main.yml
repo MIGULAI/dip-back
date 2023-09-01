@@ -1,19 +1,16 @@
-name: Deploy
-
+name: SSH deploy on push
 on: push
 jobs:
-    web-deploy:
-      name: Deploy
-      runs-on: ubuntu-latest
-      steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v3
-      - name: Sync_files
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: rsync deploy
+        uses: burnett01/rsync-deployments@5.2.1
         with:
-          server: mc511666.ftp.tools
-          username: mc511666_githubdep
-          password: 7mjPXT987z
-          server-dir: migulai.site/www/
-          protocol: ftps
-          port: 21
+          switches: -avzr --delete
+          path: .
+          remote_host: mc511666.ftp.tools
+          remote_user: mc511666
+          remote_key: ${{ secrets.REMOTE_KEY }}
+          remote_path: migulai.site/www/
