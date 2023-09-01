@@ -14,7 +14,7 @@ jobs:
           port: 22
           script: |
             cd migulai.site/www/
-            git clone https://github.com/MIGULAI/reactDipl.git
+            git clone https://github.com/MIGULAI/dip-back.git
   update:
     name: Build
     runs-on: ubuntu-latest
