@@ -1,0 +1,16 @@
+name: Deploy
+
+on: push
+jobs:
+    web-deploy:
+      name: Deploy
+      runs-on: ubuntu-latest
+      steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v3
+      - name: Sync_files
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: mc511666.ftp.tools
+          username: mc511666_git_hub
+          password: uyX66mUA39
