@@ -14,7 +14,7 @@ jobs:
           server: mc511666.ftp.tools
           username: mc511666_github_dep
           password: 5Sk9NvX2z5
-          server-dir: /migulai.site/www/
+          server-dir: migulai.site/www/
           protocol: ftps
           port: 21
           dry-run: true
