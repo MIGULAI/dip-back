@@ -10,6 +10,7 @@ class LangConroller extends Controller
 {
     public function CreateLang(LangRequest $req)
     {
+        
         try {
             $newPubl = new Languages();
             $newPubl->LanguageName = $req->langName;
