@@ -17,4 +17,3 @@ jobs:
           server-dir: migulai.site/www/
           protocol: ftp
           port: 21
-          dry-run: true
