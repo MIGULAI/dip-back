@@ -11,9 +11,9 @@ jobs:
       - name: Sync_files
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: mc511666.ftp.tools
-          username: mc511666_github_dep
-          password: 5Sk9NvX2z5
-          server-dir: migulai.site/www/
-          protocol: ftp
-          port: 21
+            server: ${{ secrets.REMOTE_HOST }}
+            username: ${{ secrets.FTP_USER }}
+            password: ${{ secrets.FTP_PASSWORD }}
+            server-dir: ${{ secrets.FTP_PATH }}
+            protocol: ftp
+            port: 21
