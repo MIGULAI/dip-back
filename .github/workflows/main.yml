@@ -1,5 +1,5 @@
 name: remote ssh command
-on: push
+on: deployment
 jobs:
   deploy:
     name: First Deploy
