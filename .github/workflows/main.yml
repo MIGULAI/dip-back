@@ -12,9 +12,9 @@ jobs:
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: mc511666.ftp.tools
-          username: mc511666_github_dep
-          password: 5Sk9NvX2z5
+          username: mc511666_githubdep
+          password: 7mjPXT987z
           server-dir: migulai.site/www/
-          protocol: ftps
+          protocol: ftp
           port: 21
           dry-run: true
