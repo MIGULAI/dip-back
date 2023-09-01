@@ -15,5 +15,5 @@ jobs:
           username: mc511666_githubdep
           password: 7mjPXT987z
           server-dir: migulai.site/www/
-          protocol: ftp
+          protocol: ftps
           port: 21
