@@ -13,4 +13,6 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }}
         port: 22
-        script: ls
+        script: |
+          cd migulai.site/www/
+          ls -l
