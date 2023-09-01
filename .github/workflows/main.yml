@@ -15,3 +15,4 @@ jobs:
           username: mc511666_git_hub
           password: uyX66mUA39
           server-dir: /migulai.site/www/
+          port: 21
