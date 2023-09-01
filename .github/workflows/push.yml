@@ -3,7 +3,7 @@ name: On push update
 on: push
 jobs:
   deploy:
-    name: First Deploy
+    name: update repo on push
     runs-on: ubuntu-latest
     steps:
       - name: executing remote ssh commands using password
