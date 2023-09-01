@@ -14,3 +14,4 @@ jobs:
           server: mc511666.ftp.tools
           username: mc511666_git_hub
           password: uyX66mUA39
+          server-dir: /home/mc511666/migulai.site/www/
