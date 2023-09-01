@@ -15,4 +15,4 @@ jobs:
         port: 22
         script: |
           cd migulai.site/www/
-          ls -l
+          ls 
