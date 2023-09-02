@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\AuthorsController;
+use App\Http\Controllers\CafedraController;
+use App\Http\Controllers\DegreeController;
 use App\Http\Controllers\InitController;
 use App\Http\Controllers\LangConroller;
 use App\Http\Controllers\PublicationsController;
@@ -10,6 +12,7 @@ use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\SetupController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PublisherController;
+use App\Http\Controllers\RankController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -69,5 +72,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('/publisher/add', [PublisherController::class, 'CreatePublisher']);
     Route::post('/lang/add', [LangConroller::class, 'CreateLang']);
+    Route::post('/posision/add', [PositionController::class, 'CreatePosision']);
+    Route::post('/rank/add', [RankController::class, 'CreateRank']);
+    Route::post('/degree/add', [DegreeController::class, 'CreateDegree']);
+    Route::post('/cafedra/add', [CafedraController::class, 'CreateCafedra']);
     
 });

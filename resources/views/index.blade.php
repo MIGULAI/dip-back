@@ -8,8 +8,8 @@
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     <title>Diplom Project</title>
-    <script defer="defer" src="/static/js/main.16537105.js"></script>
-    <link href="/static/css/main.20670aa3.css" rel="stylesheet">
+    <script defer="defer" src="/static/js/main.4923f4de.js"></script>
+    <link href="/static/css/main.7d2978ce.css" rel="stylesheet">
 </head>
 
 <body>
