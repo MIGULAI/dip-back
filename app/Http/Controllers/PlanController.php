@@ -163,20 +163,22 @@ class PlanController extends Controller
                 $publicationsByDate = Publication::join('publication_authors', 'publications.id', 'publication_authors.Publication')
                     ->whereBetween('PublicationDate', [$planDataStart, $planDataEnd])
                     ->orWhere('PublicationDate', $planDataStart)
+                    // ->select('publications.id as id1')
                     ->get();
                 $publicationsByDate = $publicationsByDate->where('Author', $planedAuthor);
-
+                // return $publicationsByDate;
+                
                 if (count($publicationsByDate)) {
-                    foreach ($publicationsByDate as $publ) {
-                        $isHere  = PublicationPlan::where('Publication', $publ->id)
-                            ->where('Plan', $plan->id)->first();
-                        if (!$isHere) {
-                            $pp = new PublicationPlan();
-                            $pp->Publication = $publ->id;
-                            $pp->Plan = $plan->id;
-                            $pp->save();
-                        }
-                    }
+                    // foreach ($publicationsByDate as $publ) {
+                    //     $isHere  = PublicationPlan::where('Publication', $publ->id)
+                    //         ->where('Plan', $plan->id)->first();
+                    //     if (!$isHere) {
+                    //         $pp = new PublicationPlan();
+                    //         $pp->Publication = $publ->id;
+                    //         $pp->Plan = $plan->id;
+                    //         $pp->save();
+                    //     }
+                    // }
                     $publAndPlans = Publication::join('publication_plans', 'publications.id', 'publication_plans.Publication')
                         ->where('Plan', $plan->id)
                         ->get();

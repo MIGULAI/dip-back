@@ -32,13 +32,13 @@ class AuthorsController extends Controller
             ];
             return response()->json([
                 'success' => true,
-                'message' => 'Authors was found',
+                'message' => ['Authors was found'],
                 'data' => $data
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'success' => false,
-                'message' => $th->getMessage()
+                'message' => [$th->getMessage()]
             ]);
         }
     }

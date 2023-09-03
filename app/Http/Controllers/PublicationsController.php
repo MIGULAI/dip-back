@@ -16,6 +16,8 @@ use App\Models\GlobalSetup;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\PublisherController;
 use App\Http\Requests\PublicationRequest;
+use App\Models\Plan;
+use App\Models\PublicationPlan;
 
 class PublicationsController extends Controller
 {
@@ -55,6 +57,22 @@ class PublicationsController extends Controller
                     $publicationAuthor->Author = $newPubl['authors'][$i]['id'];
 
                     $publicationAuthor->save();
+                    
+                    $year = date('Y', strtotime($newPubl['date']));
+                    $controlDate = $year . '-09-01';
+                    if (strtotime($newPubl['date']) < strtotime($controlDate)) {
+                        $year -= 1;
+                    }
+                    $plan = Plan::where('AuthorId', $newPubl['authors'][$i])->where('Year', $year)->first();
+                    $author = Author::where('id', $newPubl['authors'][$i])->first();
+                    if ($author && $plan) {
+                        $newPlanToPubl = new PublicationPlan();
+
+                        $newPlanToPubl->Publication = $publication->id;
+                        $newPlanToPubl->Plan = $plan->id;
+
+                        $newPlanToPubl->save(); 
+                    }
                 }
             }
             return [true, ['Publication Added Successfull']];
@@ -164,12 +182,12 @@ class PublicationsController extends Controller
                     array_push($authorsList, $authors[$i]);
                 }
             }
-            foreach ($authorsList as $author) {
-                $pa = new PublicationAuthor();
-                $pa->Publication = $req->id;
-                $pa->Author = $author['id'];
-                $pa->save();
-            }
+            // foreach ($authorsList as $author) {
+            //     $pa = new PublicationAuthor();
+            //     $pa->Publication = $req->id;
+            //     $pa->Author = $author['id'];
+            //     $pa->save();
+            // }
             $publication = Publication::where('id', $req->id)->first();
             $publication->Name = $req->name;
             $publication->EndPage = $req->lastPage;
@@ -186,20 +204,37 @@ class PublicationsController extends Controller
             // $publication->Country = $req->Country'];
             $publication->DOI = $req->url;
             $publication->save();
-             PublicationAuthor::where('Publication', $req->id)->delete();
-             $authors = $req->authors;
-             if($authors){
-                 for ($i = 0; $i < count($authors); $i++) {
-                     if ($authors[$i] !== null) {
-                         $publicationAuthor = new PublicationAuthor();
+            PublicationAuthor::where('Publication', $req->id)->delete();
+            PublicationPlan::where('Publication',$req->id)->delete();
+            $authors = $req->authors;
+            if ($authors) {
+                for ($i = 0; $i < count($authors); $i++) {
+                    if ($authors[$i] !== null) {
+                        $publicationAuthor = new PublicationAuthor();
+
+                        $publicationAuthor->Publication = $publication->id;
+                        $publicationAuthor->Author = $authors[$i]['id'];
+
+                        $publicationAuthor->save();
+
+                        $year = date('Y', strtotime($req->date));
+                        $controlDate = $year . '-09-01';
+                        if (strtotime($req->date) < strtotime($controlDate)) {
+                            $year -= 1;
+                        }
+                        $plan = Plan::where('AuthorId', $authors[$i])->where('Year', $year)->first();
+                        $author = Author::where('id', $authors[$i])->first();
+                        if ($author && $plan) {
+                            $newPlanToPubl = new PublicationPlan();
     
-                         $publicationAuthor->Publication = $publication->id;
-                         $publicationAuthor->Author = $authors[$i]['id'];
+                            $newPlanToPubl->Publication = $publication->id;
+                            $newPlanToPubl->Plan = $plan->id;
     
-                         $publicationAuthor->save();
-                     }
-                 }
-             }
+                            $newPlanToPubl->save(); 
+                        }
+                    }
+                }
+            }
             //return $authorsList;
             return response()->json([
                 'success' => true,
@@ -277,10 +312,10 @@ class PublicationsController extends Controller
                         // if ($publ[0]) {
                         //     $id = $publ[1];
                         // } else {
-                            return response()->json([
-                                'success' => false,
-                                // 'message' => $publ[1]
-                            ]);
+                        return response()->json([
+                            'success' => false,
+                            // 'message' => $publ[1]
+                        ]);
                         // }
                     } else {
                         $id = $id->id;
