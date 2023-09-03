@@ -42,7 +42,33 @@ class AuthorsController extends Controller
             ]);
         }
     }
+    public function GetAuthorsFull()
+    {
+        try {
 
+            $data = [
+                //'authors' => Author::select('*')
+                'authors' => Author::select('authors.*', 'positions.PositionName', 'degrees.DegreeName', 'ranks.RankName')
+                    ->join('departments', 'departments.id', 'authors.Specialty')
+                    ->join('organizations', 'organizations.id', 'departments.idOrganization')
+                    ->join('positions', 'positions.id', 'authors.Position')
+                    ->join('specialties', 'specialties.id', 'authors.Specialty')
+                    ->join('degrees', 'degrees.id', 'authors.Degree')
+                    ->join('ranks', 'ranks.id', 'authors.Rank')
+                    ->get()
+            ];
+            return response()->json([
+                'success' => true,
+                'message' => ['Authors was found'],
+                'data' => $data
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => [$th->getMessage()]
+            ]);
+        }
+    }
     public function PutAuthor(AuthorRequest $req)
     {
         try {
