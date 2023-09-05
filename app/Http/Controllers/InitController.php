@@ -12,6 +12,7 @@ class InitController extends Controller
     {
         $authStatus = false;
         if (Auth::check()) {
+            
             $authStatus = true;
         }
 
