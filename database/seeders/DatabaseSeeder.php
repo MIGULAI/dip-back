@@ -18,6 +18,7 @@ use Database\Seeders\AuthorSeeder;
 use Database\Seeders\PublisherSeeder;
 use Database\Seeders\GlobalSetupSeeder;
 use Database\Seeders\PlanSeeder;
+use Database\Seeders\PublicationSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -40,7 +41,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AuthorSeeder::class,
             PublisherSeeder::class,
-            PlanSeeder::class
+            PlanSeeder::class,
+             PublicationSeeder::class
         ]);
     }
 }
