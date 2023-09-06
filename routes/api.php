@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnalyzeController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\CafedraController;
@@ -50,6 +51,10 @@ Route::get('/author', [AuthorsController::class, 'GetAuthor']);
 Route::get('/positions', [PositionController::class, 'GetPositions']);
 
 Route::get('/publication/authors', [PublicationsController::class, 'GetAuthors']);
+
+Route::get('/depanalyze/authors/count', [AnalyzeController::class, 'GetAuthorsOfDepartmentCount']);
+Route::get('/depanalyze/basestat', [AnalyzeController::class, 'GetBasicDepStats']);
+
 
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
