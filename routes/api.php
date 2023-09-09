@@ -54,6 +54,9 @@ Route::get('/publication/authors', [PublicationsController::class, 'GetAuthors']
 
 Route::get('/depanalyze/authors/count', [AnalyzeController::class, 'GetAuthorsOfDepartmentCount']);
 Route::get('/depanalyze/basestat', [AnalyzeController::class, 'GetBasicDepStats']);
+Route::get('/depanalyze/studentcount', [AnalyzeController::class, 'GetStudentCount']);
+Route::get('/depanalyze/publcountbytypes', [AnalyzeController::class, 'GetCountByYearsAndTypes']);
+
 
 
 
@@ -84,3 +87,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/cafedra/add', [CafedraController::class, 'CreateCafedra']);
     
 });
+
+Route::get('/{any}', function () {
+    return response()->json(['success' => false, 'message' => 'Route didnt found' ], 404);
+})->where('any', '.*');
