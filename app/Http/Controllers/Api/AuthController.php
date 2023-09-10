@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -50,6 +53,24 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $authToken,
             'user' => $user
-        ])->withCookie('access_token', $authToken, 60*24);
+        ])->withCookie('access_token', $authToken, 60 * 24);
+    }
+    public function logout(Request $request)
+    {
+        try {
+            $user = $request->user();
+            $user->tokens()->delete();
+            Cookie::queue(Cookie::forget('access_token'));
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return response()->json([
+                'success' => true,
+            ])->withCookie(cookie('access_token', null, 0));
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e
+            ];
+        }
     }
 }

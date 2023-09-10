@@ -42,6 +42,34 @@ class AuthorsController extends Controller
             ]);
         }
     }
+    public function GetPlaningAuthors()
+    {
+        try {
+
+            $data = [
+                'authors' => Author::select('authors.*')
+                    ->join('departments', 'departments.id', 'authors.Specialty')
+                    ->join('organizations', 'organizations.id', 'departments.idOrganization')
+                    ->join('positions', 'positions.id', 'authors.Position')
+                    ->join('specialties', 'specialties.id', 'authors.Specialty')
+                    ->join('degrees', 'degrees.id', 'authors.Degree')
+                    ->join('ranks', 'ranks.id', 'authors.Rank')
+                    ->where('authors.PlanningStatus', true)
+                    ->where('authors.Department', 2)
+                    ->get()
+            ];
+            return response()->json([
+                'success' => true,
+                'message' => ['Authors was found'],
+                'data' => $data
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => [$th->getMessage()]
+            ]);
+        }
+    }
     public function GetAuthorsFull()
     {
         try {

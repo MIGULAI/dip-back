@@ -42,10 +42,13 @@ Route::get('/publications', [PublicationsController::class, 'GetAllPublications'
 Route::post('/publication', [PublicationsController::class, 'GetPublicationById']);
 
 Route::get('/plans/years', [PlanController::class, 'GetYearsList']);
+Route::get('/plans/yearsbyauthor', [PlanController::class, 'GetYearsListByAuthor']);
 Route::post('/plans/year', [PlanController::class, 'GetPlansByYear']);
+Route::get('/plan/byyearsndbyauthor', [PlanController::class, 'GetYearsAndByAuthor']);
 Route::post('/plan/about', [PlanController::class, 'GetPlanById']);
 
 Route::get('/authors', [AuthorsController::class, 'GetAuthors']);
+Route::get('/planinauthors', [AuthorsController::class, 'GetPlaningAuthors']);
 Route::get('/authors/full', [AuthorsController::class, 'GetAuthorsFull']);
 Route::get('/author', [AuthorsController::class, 'GetAuthor']);
 Route::get('/positions', [PositionController::class, 'GetPositions']);
@@ -56,6 +59,8 @@ Route::get('/depanalyze/authors/count', [AnalyzeController::class, 'GetAuthorsOf
 Route::get('/depanalyze/basestat', [AnalyzeController::class, 'GetBasicDepStats']);
 Route::get('/depanalyze/studentcount', [AnalyzeController::class, 'GetStudentCount']);
 Route::get('/depanalyze/publcountbytypes', [AnalyzeController::class, 'GetCountByYearsAndTypes']);
+
+Route::get('/authoranalyze/publcountbytypesbyauthor', [AnalyzeController::class, 'GetCountByYearsAndTypesByAuthor']);
 
 
 
@@ -85,7 +90,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/rank/add', [RankController::class, 'CreateRank']);
     Route::post('/degree/add', [DegreeController::class, 'CreateDegree']);
     Route::post('/cafedra/add', [CafedraController::class, 'CreateCafedra']);
-    
+    Route::get('/logout', [AuthController::class, 'logout']);
+
 });
 
 Route::get('/{any}', function () {

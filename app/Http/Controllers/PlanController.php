@@ -8,6 +8,7 @@ use App\Models\GlobalSetup;
 use App\Models\Plan;
 use App\Models\Publication;
 use App\Models\PublicationPlan;
+use App\Models\Type;
 use DateTime;
 
 class PlanController extends Controller
@@ -32,6 +33,60 @@ class PlanController extends Controller
         }
     }
 
+    public function GetYearsListByAuthor(Request $req): array
+    {
+        $years = Plan::where('AuthorId', $req->id)->pluck('Year')->toArray();
+
+        return [
+            'success' => true,
+            'data' => ['years' => $years]
+        ];
+    }
+
+    public function GetYearsAndByAuthor(Request $req): array
+    {
+        $planId = Plan::where('AuthorId', $req->id)->where('Year', $req->year)->first('id');
+        $planRaw = Plan::where('AuthorId', $req->id)->where('Year', $req->year)->first();
+        if(!$planRaw){
+            return [
+                'success' => false,
+                'message' => ['План не знайдено']
+            ];
+        }
+        $typesData = Type::all();
+        $types = [];
+        $plan = [];
+        foreach ($typesData as $type) {
+            $newKey = $type->TypeName . ' (' . $type->TypeShortName . ')';
+            $types[$type->id] = $newKey;
+            if($type->id === 1){
+                $plan[$newKey] = $planRaw->Theses;
+            }else if($type->id === 2){
+                $plan[$newKey] = $planRaw->ProfetionalArticles;
+            }else if($type->id === 3){
+                $plan[$newKey] = $planRaw->Scopus;
+            }else if($type->id === 4){
+                $plan[$newKey] = $planRaw->Manuals;
+            }
+        }
+
+    
+        $real = [];
+        foreach ($types as $key => $type) {
+            $res =  PublicationPlan::join('publications', 'publications.id', 'publication_plans.Publication')
+                ->where('publication_plans.Plan', $planId->id)
+                ->where('publications.Type', $key)
+                ->get();
+            $real[$type] = count($res);
+        }
+        return [
+            'success' => true,
+            'data' =>[
+                'resultData' => $real,
+                'plan' => $plan,
+            ]
+        ];
+    }
     public function GetPlansByYear(Request $req)
     {
         try {
@@ -96,7 +151,7 @@ class PlanController extends Controller
             $planingYear = intval($req->year);
             $setup = GlobalSetup::pluck('SetupValue', 'SetupName')->all();
             $plans = $this->CreatePlan($planingYear, $setup);
-            if(count($plans) === 0){
+            if (count($plans) === 0) {
                 return response()->json([
                     'success' => false,
                     'message' => "Неможлииво сформувати план."
@@ -167,7 +222,7 @@ class PlanController extends Controller
                     ->get();
                 $publicationsByDate = $publicationsByDate->where('Author', $planedAuthor);
                 // return $publicationsByDate;
-                
+
                 if (count($publicationsByDate)) {
                     // foreach ($publicationsByDate as $publ) {
                     //     $isHere  = PublicationPlan::where('Publication', $publ->id)

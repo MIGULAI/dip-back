@@ -117,4 +117,39 @@ class AnalyzeController extends Controller
             'data' => $statistic
         ];
     }
+
+    public function GetCountByYearsAndTypesByAuthor(Request $req) {
+        if(!$req->id){
+            return [
+                'success' => false,
+                'message' => ['id is null']
+            ];
+        }
+        $years = $this->getLastYears();
+        $types = Type::get(['id', 'TypeShortName as typeName']);
+        $statistic = [];
+        foreach ($types as $type) {
+            $publs = [];
+            foreach ($years as $year) {
+                $dateFrom = $year . '-09-01';
+                $dateTo = $year + 1 . '-08-31';
+                $typeid = $type->id;
+                $typeByYearPubls = DB::table('publication_authors')
+                    ->select(DB::raw('count(*)'))
+                    ->join('authors', 'authors.id', '=', 'publication_authors.Author')
+                    ->join('publications', 'publications.id', '=', 'publication_authors.Publication')
+                    ->where('publications.Type', $typeid)
+                    ->where('authors.id', $req->id)
+                    ->whereBetween('publications.PublicationDate', [$dateFrom, $dateTo])
+                    ->groupBy('publication_authors.Publication')
+                    ->get();
+                $publs[$year] = count($typeByYearPubls);
+            }
+            $statistic[$type->typeName] = $publs;
+        }
+        return [
+            'success' => true,
+            'data' => $statistic
+        ];
+    }
 }
