@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthorsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/author/zvit',  [AuthorsController::class, 'AboutAuthorGenerate']);
 
 Route::get('/{any}', function () {
     // return redirect('http://localhost:3000');
