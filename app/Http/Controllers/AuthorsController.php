@@ -15,7 +15,9 @@ use App\Models\Author;
 use App\Models\Country;
 use App\Models\Publication;
 use App\Models\PublicationAuthor;
+use App\Models\Publisher;
 use App\Models\Type;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Element\Table;
 use PhpOffice\PhpWord\TemplateProcessor;
 use PhpOffice\PhpWord\IOFactory;
@@ -254,8 +256,12 @@ class AuthorsController extends Controller
 
     public function AboutAuthorGenerate(Request $req)
     {
+        $filename = 'author_' . $req->id . "_all_publications";
+        if(file_exists('files/' . $filename . '.docx') && !Auth::check()){
+            return redirect()->to('/files/' . $filename . '.docx');
+        }
         $author = Author::where('id', $req->id)->first();
-        $fullname = $author->SerName . ' ' . $author->name . ' ' . $author->Patronic;
+        $fullname = $author->SerName . ' ' . $author->Name . ' ' . $author->Patronic;
         $position = $author->Position !== 1 ?  Position::where('id', $author->Position)->first()->PositionName : null;
         $degree = $author->DegreeName !== 1 ? Degree::where('id', $author->Degree)->first()->DegreeName : null;
         $rank = $author->Rank !== 1 ? Ranks::where('id', $author->Rank)->first()->RankName : null;
@@ -403,6 +409,10 @@ class AuthorsController extends Controller
 
             $table->addCell(1, [...$borderStyle,])->addText($publication->Name, $textLight);
             $libData = '';
+            $publisher = Publisher::where('id', $publication->Publisher)->first();
+            $libData .= $publisher->PublisherName . ', ';
+            $libData .= $publication->StartPage . ($publication->EndPage ? ' - ' . $publication->EndPage : '') . '.';
+            $libData .= $publication->DOI ? ', doi: ' . $publication->DOI : '';
             $table->addCell(1, [...$borderStyle,])->addText($libData, $textLight);
             $date = date('m.Y', strtotime($publication->PublicationDate));
             $table->addCell(1, [...$borderStyle,])->addText($date, $textLight, ['align' => 'center']);
@@ -414,7 +424,6 @@ class AuthorsController extends Controller
             $scopus = '-';
             $table->addCell(1, [...$borderStyle,])->addText($scopus, $textLight, ['align' => 'center']);
         }
-        $filename = 'author_' . $req->id . "_all_publications";
 
         $templateProcessor->setComplexBlock('{table}', $table);
 
