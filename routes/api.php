@@ -38,6 +38,7 @@ Route::get('/userinit', [SetupController::class, 'ClientSetup']);
 
 Route::get('/setup', [SetupController::class, 'GetGlobalSetup']);
 Route::post('/publication/byAutorId', [PublicationsController::class, 'PublByAuthorID']);
+Route::post('/publication/byplan', [PublicationsController::class, 'PublByPlan']);
 Route::get('/publications', [PublicationsController::class, 'GetAllPublications']);
 Route::post('/publication', [PublicationsController::class, 'GetPublicationById']);
 

@@ -383,4 +383,28 @@ class PublicationsController extends Controller
             ]);
         }
     }
+
+    public function PublByPlan(Request $req)
+    {
+        try{
+            $plan = Plan::where('id', $req->id)->first();
+            $authorId = $plan->AuthorId;
+            $year = $plan->Year;
+            $dateStart =  $year . '-09-01';
+            $dateEnd =  ++$year . '-08-31';
+            $publs = Publication::join('publication_authors', 'publications.id', 'publication_authors.Publication')->where('Author', $authorId)->whereBetween('publications.PublicationDate', [$dateStart, $dateEnd])->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Publications of author by id',
+                'data' => [
+                    'publs' => $publs
+                ]
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => $th->getMessage()
+            ]);
+        }
+    }
 }
