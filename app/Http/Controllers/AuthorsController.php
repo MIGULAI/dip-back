@@ -257,7 +257,7 @@ class AuthorsController extends Controller
     public function AboutAuthorGenerate(Request $req)
     {
         $filename = 'author_' . $req->id . "_all_publications";
-        if(file_exists('files/' . $filename . '.docx') && !Auth::check()){
+        if (file_exists('files/' . $filename . '.docx') && !Auth::check()) {
             return redirect()->to('/files/' . $filename . '.docx');
         }
         $author = Author::where('id', $req->id)->first();
@@ -425,6 +425,178 @@ class AuthorsController extends Controller
             $table->addCell(1, [...$borderStyle,])->addText($scopus, $textLight, ['align' => 'center']);
         }
 
+        $templateProcessor->setComplexBlock('{table}', $table);
+
+        $templateProcessor->saveAs('./files/' . $filename . '.docx', 'Word2007');
+
+        return redirect()->to('/files/' . $filename . '.docx');
+    }
+    public function SupervisorAuthor(Request $req)
+    {
+
+        $table = new Table(array('unit' =>  \PhpOffice\PhpWord\SimpleType\TblWidth::TWIP, 'orientation' => 'landscape'));
+        $filename = 'author_' . $req->id . "_supervisor_publications";
+        if (file_exists('files/' . $filename . '.docx') && !Auth::check()) {
+            return redirect()->to('/files/' . $filename . '.docx');
+        }
+        $author = Author::where('id', $req->id)->first();
+        $fullname = $author->SerName . ' ' . $author->Name . ' ' . $author->Patronic;
+        $position = $author->Position !== 1 ?  Position::where('id', $author->Position)->first()->PositionName : null;
+        $degree = $author->DegreeName !== 1 ? Degree::where('id', $author->Degree)->first()->DegreeName : null;
+        $rank = $author->Rank !== 1 ? Ranks::where('id', $author->Rank)->first()->RankName : null;
+        $templateProcessor = new TemplateProcessor('files/base/author_base.docx');
+        $templateProcessor->setValue('author', $fullname);
+        $templateProcessor->setValue('authorPlace', $position ? $position : '-');
+        $templateProcessor->setValue('authorDegree', $degree ? $degree : '-');
+        $templateProcessor->setValue('authorRank', $rank ? $rank : '-');
+        $borderStyle = [
+            'borderSize' => 6,
+            'valign' => 'center'
+        ];
+        $text = [
+            'name' => 'Arial',
+            'size' => '10',
+            'color' => '000000',
+            'bold' => true,
+        ];
+        $textLight = [
+            'name' => 'Arial',
+            'size' => '10',
+            'color' => '000000',
+        ];
+        $verticalCenter = ['spaceAfter' => 550, 'spaceBefore' => 550, 'align' => 'center'];
+        $table->addRow();
+        $table->addCell(500, $borderStyle)->addText('№ з/п', [
+            ...$text,
+            'italic' => false
+        ], [...$verticalCenter]);
+        $table->addCell(750, [
+            ...$borderStyle,
+            'textDirection' => \PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR,
+        ])->addText('Тип публікації', [
+            ...$text,
+            'italic' => true,
+        ], [
+            'spaceAfter' => 200,
+            'spaceBefore' => 200,
+            'align' => 'center'
+            // ...$verticalCenter
+        ]);
+        $table->addCell(2700, [
+            ...$borderStyle,
+        ])->addText('ПІБ студента', $text,  ['spaceAfter' => 400, 'spaceBefore' => 375, 'align' => 'center']);
+        $table->addCell(9000, [...$borderStyle, 'valign' => 'center',])->addText('Назва публікації', $text, [...$verticalCenter]);
+        $table->addCell(11000,  [...$borderStyle, 'valign' => 'center',])->addText('Бібліографічні дані', $text, [...$verticalCenter]);
+        $table->addCell(750, [
+            ...$borderStyle,
+            'textDirection' => \PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR,
+        ])->addText('Місяць<w:br/> та рік видання', $text, [
+            'spaceAfter' => 200,
+            'spaceBefore' => 200,
+            'align' => 'center'
+        ]);
+        $table->addCell(750, [
+            ...$borderStyle,
+            'textDirection' => \PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR,
+        ])->addText('Друковані аркуші', $text, [
+            'spaceAfter' => 200,
+            'spaceBefore' => 200,
+            'align' => 'center'
+        ]);
+        $table->addCell(750, [
+            ...$borderStyle,
+            'textDirection' => \PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR,
+        ])->addText('Фахове видання', $text, [
+            'spaceAfter' => 200,
+            'spaceBefore' => 200,
+            'align' => 'center'
+        ]);
+        $table->addCell(750, [
+            ...$borderStyle,
+            'textDirection' => \PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR,
+        ])->addText('Спрямування публікації', $text, [
+            'spaceAfter' => 200,
+            'spaceBefore' => 200,
+            'align' => 'center'
+        ]);
+        $table->addCell(750, [
+            ...$borderStyle,
+            'textDirection' => \PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR,
+        ])->addText('Країна видання', $text, [
+            'spaceAfter' => 200,
+            'spaceBefore' => 200,
+            'align' => 'center'
+        ]);
+        $table->addCell(750, [
+            ...$borderStyle,
+            'textDirection' => \PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR,
+        ])->addText('ІSI/Scopus', $text, [
+            'spaceAfter' => 200,
+            'spaceBefore' => 200,
+            'align' => 'center'
+        ]);
+        $table->addRow();
+        $table->addCell(1, [...$borderStyle,])->addText('1', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('2', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('3', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('4', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('5', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('6', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('7', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('8', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('9', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('10', $textLight, ['align' => 'center']);
+        $table->addCell(1, [...$borderStyle,])->addText('11', $textLight, ['align' => 'center']);
+
+
+        //$publications = Publication::select('publications.*')->join('publication_authors', 'publications.id', 'publication_authors.Publication')->where('Supervisor', $req->id)->get();
+        $publications = Publication::select('publications.*')->join('publication_authors', 'publications.id', 'publication_authors.Publication')->where('Author', $req->id)->get();
+        //dd($publications);
+        foreach ($publications as $key => $publication) {
+
+            $aUthors = PublicationAuthor::where('Publication', $publication->id)->get();
+            $author = Author::where('id', $aUthors[0]->Author)->first();
+            if (count($aUthors) === 1 && $author->Position === 2) {
+                $table->addRow();
+                $table->addCell(1, [...$borderStyle, 'valign' => 'center',])->addText(count($publications) - $key, $textLight, [
+                    'valign' => 'center',
+                    'align' => 'center'
+                ]);
+                $type = Type::where('id', $publication->Type)->first()->TypeShortName;
+                $table->addCell(1, [...$borderStyle, 'valign' => 'center',])->addText($type, $textLight, [
+
+                    'align' => 'center'
+                ]);
+                $authorsCell = $table->addCell(1, [...$borderStyle,]);
+                foreach ($aUthors as $author) {
+                    if ($author->Author !== (int) $req->id) {
+                        $author = Author::where('id', $author->Author)->first();
+                        $name = $author->SerName . ' ' . mb_str_split($author->Name)[0] . '.' . ($author->Patronic ?  ' ' . mb_str_split($author->Patronic)[0] . '.' : '');
+                        $style = [
+                            ...$textLight
+                        ];
+                        $authorsCell->addText($name . ',', $style);
+                    }
+                }
+
+                $table->addCell(1, [...$borderStyle,])->addText($publication->Name, $textLight);
+                $libData = '';
+                $publisher = Publisher::where('id', $publication->Publisher)->first();
+                $libData .= $publisher->PublisherName . ', ';
+                $libData .= $publication->StartPage . ($publication->EndPage ? ' - ' . $publication->EndPage : '') . '.';
+                $libData .= $publication->DOI ? ', doi: ' . $publication->DOI : '';
+                $table->addCell(1, [...$borderStyle,])->addText($libData, $textLight);
+                $date = date('m.Y', strtotime($publication->PublicationDate));
+                $table->addCell(1, [...$borderStyle,])->addText($date, $textLight, ['align' => 'center']);
+                $table->addCell(1, [...$borderStyle,])->addText($publication->UPP, $textLight, ['align' => 'center']);
+                $table->addCell(1, [...$borderStyle,])->addText('-', $textLight, ['align' => 'center']);
+                $table->addCell(1, [...$borderStyle,])->addText('-', $textLight, ['align' => 'center']);
+                $country = Country::where('id', $publication->Country)->first()->CountryShortName;
+                $table->addCell(1, [...$borderStyle,])->addText($country, $textLight, ['align' => 'center']);
+                $scopus = '-';
+                $table->addCell(1, [...$borderStyle,])->addText($scopus, $textLight, ['align' => 'center']);
+            }
+        }
         $templateProcessor->setComplexBlock('{table}', $table);
 
         $templateProcessor->saveAs('./files/' . $filename . '.docx', 'Word2007');
