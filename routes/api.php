@@ -7,6 +7,7 @@ use App\Http\Controllers\CafedraController;
 use App\Http\Controllers\DegreeController;
 use App\Http\Controllers\InitController;
 use App\Http\Controllers\LangConroller;
+use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\PublicationsController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\StatisticController;
@@ -63,6 +64,7 @@ Route::get('/depanalyze/publcountbytypes', [AnalyzeController::class, 'GetCountB
 
 Route::get('/authoranalyze/publcountbytypesbyauthor', [AnalyzeController::class, 'GetCountByYearsAndTypesByAuthor']);
 
+Route::get('/monitoring/byplan', [MonitoringController::class, 'getPlanId']);
 
 
 
