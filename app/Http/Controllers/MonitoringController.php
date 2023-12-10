@@ -166,6 +166,7 @@ class MonitoringController extends Controller
     $resultMonographs = $this->calculate($monographses);
     return response()->json([
       'success' => true,
+      'plan' => $plan,
       'data' => [
         'teses' => $resultTeses,
         'articles' => $resultArticles,
